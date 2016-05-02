@@ -40,12 +40,13 @@ class NotifynderParser
         //$extra = json_decode($extra);
         $specialValues = $this->getValues($body);
 
+
         if ($specialValues > 0) {
 
-            list($extractedExtra, $relationsToReplace) = $this->categorizeSpecialValues($specialValues);
-
+            list($extractedExtra, $relationsToReplace, $notificationValues) = $this->categorizeSpecialValues($specialValues);
             $body = $this->replaceExtraValues($extractedExtra, $extraParam, $body);
             $body = $this->replaceValuesRelations($item, $relationsToReplace, $body);
+            $body = $this->replaceNotificationValues($item, $notificationValues, $body);
         }
 
         return $body;
@@ -76,21 +77,24 @@ class NotifynderParser
     {
         $extrasToReplace = [];
         $relationsToReplace = [];
+        $notificationToReplace = [];
 
         foreach ($specialValues as $specialValue) {
 
             if (starts_with($specialValue, 'extra.')) {
                 $extrasToReplace[] = $specialValue;
-            } else {
-                if (starts_with($specialValue, 'to.') or
+            }
+            else if (starts_with($specialValue, 'to.') or
                     starts_with($specialValue, 'from.')
                 ) {
                     $relationsToReplace[] = $specialValue;
-                }
+            }
+            else if (starts_with($specialValue, 'notification.')) {
+                $notificationToReplace[] = $specialValue;
             }
         }
 
-        return array($extrasToReplace, $relationsToReplace);
+        return array($extrasToReplace, $relationsToReplace, $notificationToReplace);
     }
 
     /**
@@ -164,6 +168,29 @@ class NotifynderParser
             $field = $valueMatch[1];
 
             $body = str_replace('{'.$replacer.'}', $item[$relation][$field], $body);
+        }
+
+        return $body;
+    }
+
+    /**
+     * Replace notifications such as url, created_at values as
+     * 'notification', that means you
+     * can have parsed value from notification
+     * {notification.url} to the url field of the notification
+     *
+     * @param $item
+     * @param $notificationValues
+     * @param $body
+     * @return mixed
+     */
+    protected function replaceNotificationValues($item, $notificationValues, $body)
+    {
+        foreach ($notificationValues as $replacer) {
+            $valueMatch = explode('.', $replacer);
+            $field = $valueMatch[1];
+
+            $body = str_replace('{'.$replacer.'}', $item[$field], $body);
         }
 
         return $body;
