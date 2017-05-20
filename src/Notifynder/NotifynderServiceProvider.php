@@ -377,6 +377,6 @@ class NotifynderServiceProvider extends ServiceProvider
          * Create aliases for the dependency.
          */
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-        $loader->alias('LadaCache', 'Spiritix\LadaCache\Database\Model');
+        $loader->alias('Model', 'Spiritix\LadaCache\Database\Model');
     }
 }

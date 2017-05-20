@@ -1,7 +1,7 @@
 <?php namespace Fenos\Notifynder\Models;
 
 // use Illuminate\Database\Eloquent\Model;
-use LadaCache;
+use Model;
 /**
  * Class NotificationCategory
  *
