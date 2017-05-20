@@ -4,8 +4,8 @@ use Fenos\Notifynder\Notifications\ExtraParams;
 use Fenos\Notifynder\Parsers\NotifynderParser;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
+// use Illuminate\Database\Eloquent\Model;
+use LadaCache, Carbon\Carbon;
 use Illuminate\Support\Arr;
 
 /**

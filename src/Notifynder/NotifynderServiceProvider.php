@@ -54,6 +54,7 @@ class NotifynderServiceProvider extends ServiceProvider
         $this->events();
         $this->contracts();
         $this->artisan();
+        $this->ladaCache();
     }
 
     /*
@@ -363,5 +364,19 @@ class NotifynderServiceProvider extends ServiceProvider
             'notifynder.artisan.group-add',
             'notifynder.artisan.group-add-categories',
         ]);
+    }
+
+    protected function ladaCache()
+    {
+        /*
+         * Register the service provider for the dependency.
+         */
+        $this->app->register('Spiritix\LadaCache\LadaCacheServiceProvider');
+
+        /*
+         * Create aliases for the dependency.
+         */
+        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+        $loader->alias('LadaCache', 'Spiritix\LadaCache\Database\Model');
     }
 }
